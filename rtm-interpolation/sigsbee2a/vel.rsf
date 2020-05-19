@@ -1,4 +1,4 @@
-3.1-git	sfsegyread	zhiguang/rtm-interpolation/sigsbee2a:	bengremillion@begw-sf-a09288.beg.utexas.edu	Thu Mar 26 14:15:26 2020
+3.1-git	sfsegyread	rz2020/rtm-interpolation/sigsbee2a:	bengremillion@begw-sf-a09288.beg.utexas.edu	Tue May 19 15:22:36 2020
 
 	d2=1
 	o1=0
@@ -15,7 +15,7 @@
 	n1=1201
 	in="stdin"
 
-3.1-git	sfput	zhiguang/rtm-interpolation/sigsbee2a:	bengremillion@begw-sf-a09288.beg.utexas.edu	Thu Mar 26 14:15:26 2020
+3.1-git	sfput	rz2020/rtm-interpolation/sigsbee2a:	bengremillion@begw-sf-a09288.beg.utexas.edu	Tue May 19 15:22:36 2020
 
 	unit2=km
 	d2=.00762
@@ -29,8 +29,8 @@
 	d1=.00762
 	in="stdin"
 
-3.1-git	sfscale	zhiguang/rtm-interpolation/sigsbee2a:	bengremillion@begw-sf-a09288.beg.utexas.edu	Thu Mar 26 14:15:26 2020
+3.1-git	sfscale	rz2020/rtm-interpolation/sigsbee2a:	bengremillion@begw-sf-a09288.beg.utexas.edu	Tue May 19 15:22:36 2020
 
 	data_format="native_float"
 	esize=4
-	in="/home/bengremillion/DATAPATH/zhiguang/rtm-interpolation/sigsbee2a/vel.rsf@"
+	in="/home/bengremillion/DATAPATH/rz2020/rtm-interpolation/sigsbee2a/vel.rsf@"
