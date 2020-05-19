@@ -130,7 +130,7 @@ for i in range(ns):
 # Fpadvel=padvel.rsf nb=60 ns=356 ds=0.06858 s0=3.048 rnx=1001 nr=1001 ndr=1 nr0=0 gpz=3 spx=500 spz=3
 Flow('data','csource padvel',
      '''
-	 Fpadvel=${SOURCES[1]} nb=60
+	 mpilrmodel Fpadvel=${SOURCES[1]} nb=60
 	 ns=356 ds=0.06858 s0=3.048
 	 rnx=1001 nr=1001 ndr=1 nr0=0
 	 gpz=3 spx=500 spz=3
@@ -147,7 +147,7 @@ Result('rdata','window j3=10 |grey title= ')
 # gpz=3 spx=500 spz=3 rnx=1001 ntau=201 dtau=0.004 tau0=-0.4 path1='./mat2/left' path2='./mat2/right'
 Flow('img1 img2','data csource padvel',
      '''
-	 Fimg2=${TARGETS[1]} Fsrc=$${SOURCES[1]} Fpadvel=${SOURCES[2]}
+	 mpilrrtm_ts Fimg2=${TARGETS[1]} Fsrc=$${SOURCES[1]} Fpadvel=${SOURCES[2]}
 	 verb=n taper=0 scalet=2 nb=60 nds=3
 	 gpz=3 spx=500 spz=3 rnx=1001
 	 ntau=201 dtau=0.004 tau0=-0.4

@@ -4,7 +4,7 @@ from rsf.proj import *
 # ######################
 # Download from http://www.freeusp.org/2007_BP_Ani_Vel_Benchmark/
 tgz = 'ModelParams.tar.gz'
-#Fetch(tgz,'BP',top=os.environ.get('DATAPATH'),server='local')
+Fetch(tgz,'BP',top=os.environ.get('DATAPATH'),server='local')
 
 pars = Split('epsilon delta vp theta')
 sgy = {}
@@ -79,31 +79,31 @@ ds=0.2
 nds=4
 
 #old=['vpj','vxj','etaj','theta0j']
-#for i in range(ns):
-#    vz=vpf+'%d' %(i+1)
-#    vx=vxf+'%d' %(i+1)
-#    eta=etaf+'%d' %(i+1)
-#    theta=thetaf+'%d' %(i+1)
-#    new=[vz,vx,eta,theta]
-#    for j in range(4):
-#        Flow(new[j],old[j],
-#		    '''
-#			window f2=%d n2=%d |
-#			pad2 bottom=%d top=%d left=%d right=%d
-#			''' %(i*nds,351,nb,nb,nb,nb))
-#
-#    fft=fftf+'%d' %(i+1)
-#    Flow(fft,vz,'rtoc |fft3 axis=1 pad=1 |fft3 axis=2 pad=1')
-#
-#    left=leftf+'%d' %(i+1)
-#    right=rightf+'%d' %(i+1)
-#    Flow([right,left],[vz,vx,eta,theta,fft],
-#        '''
-#        zanisolr2 seed=2013 dt=%g velx=${SOURCES[1]} eta=${SOURCES[2]}
-#        theta=${SOURCES[3]} fft=${SOURCES[4]} vels=${SOURCES[1]} left=${TARGETS[1]} npk=50
-#		eps=1e-4 os=y sub=n mode=0 abc=2 approx=2
-#        nbt=%d nbb=%d nbl=%d nbr=%d ct=%g cb=%g cl=%g cr=%g
-#        ''' %(dt, nb, nb, nb, nb, 0.01, 0.01, 0.01, 0.01))
+for i in range(ns):
+    vz=vpf+'%d' %(i+1)
+    vx=vxf+'%d' %(i+1)
+    eta=etaf+'%d' %(i+1)
+    theta=thetaf+'%d' %(i+1)
+    new=[vz,vx,eta,theta]
+    for j in range(4):
+        Flow(new[j],old[j],
+		    '''
+			window f2=%d n2=%d |
+			pad2 bottom=%d top=%d left=%d right=%d
+			''' %(i*nds,351,nb,nb,nb,nb))
+
+    fft=fftf+'%d' %(i+1)
+    Flow(fft,vz,'rtoc |fft3 axis=1 pad=1 |fft3 axis=2 pad=1')
+
+    left=leftf+'%d' %(i+1)
+    right=rightf+'%d' %(i+1)
+    Flow([right,left],[vz,vx,eta,theta,fft],
+        '''
+        zanisolr2 seed=2013 dt=%g velx=${SOURCES[1]} eta=${SOURCES[2]}
+        theta=${SOURCES[3]} fft=${SOURCES[4]} vels=${SOURCES[1]} left=${TARGETS[1]} npk=50
+		eps=1e-4 os=y sub=n mode=0 abc=2 approx=2
+        nbt=%d nbb=%d nbl=%d nbr=%d ct=%g cb=%g cl=%g cr=%g
+        ''' %(dt, nb, nb, nb, nb, 0.01, 0.01, 0.01, 0.01))
 
 # Data interpolation
 # ##################
@@ -119,8 +119,16 @@ Flow('data','shot4',
 # ##########
 # 200+50 66+100 201+150
 # export OMP_NUM_THREADS=24
-# ibrun tacc_affinity sfmpilrrtm_ts --input=data.rsf --output=img1.rsf Fimg2=img2.rsf Fsrc=csource.rsf Fpadvel=vpj.rsf verb=n repeat=1 taper=4 nb=60 nds=4 gpz=0 spx=250 spz=0 rnx=351 nr0=50 ntau=201 dtau=0.002 tau0=-0.2 ncut=100
+# ibrun tacc_affinity sfmpilrrtm_ts --input=data.rsf --output=img1.rsf Fimg2=img2.rsf
+# Fsrc=csource.rsf Fpadvel=vpj.rsf verb=n repeat=1 taper=4 nb=60 nds=4 gpz=0 spx=250 spz=0
+# rnx=351 nr0=50 ntau=201 dtau=0.002 tau0=-0.2 ncut=100
 # sbatch rtm
+Flow('img1 img2','data csource vpj',
+     '''
+     mpilrrtm_ts verb=n repeat=1 taper=4 nb=60 nds=4 gpz=0 spx=250 spz=0
+     rnx=351 nr0=50 ntau=201 dtau=0.002 tau0=-0.2 ncut=100
+     path1='./mat/left' path2='./mat/right'
+     ''')
 
 Flow('bpcube','img1',
     '''
@@ -174,6 +182,7 @@ Flow('right1 left1','vp1pad vx1pad eta1pad theta01pad fft1',
 # time-shift interpolation
 # <interzone1.rsf sfmpictshiftlr left=left1.rsf right=right1.rsf cmplx=y >cinterzone1.rsf
 # sbatch ctinter1
+Flow('cinterzone1','interzone1 left1 right1','mpictshiftlr left=${SOURCES[1]} right=${SOURCES[2]} cmplx=y')
 
 Flow('scinterzone1','cinterzone1',
     '''
