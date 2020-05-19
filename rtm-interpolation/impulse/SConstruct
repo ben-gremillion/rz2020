@@ -1,0 +1,228 @@
+from rsf.proj import *
+import math
+
+# Plotting function
+###################
+def plotmodel():
+	return '''
+	window min1=1250 max1=2350 min2=2600 max2=3400 |
+	wiggle wanttitle=n poly=y transp=y yreverse=y zplot=1. screenratio=0.4 screenht=5 labelsz=5
+	'''
+
+def plotmodel1():
+	return '''
+	window min1=1250 max1=2350 min2=2600 max2=3400 |
+	wiggle  wanttitle=n poly=y transp=y yreverse=y zplot=.9 screenratio=0.4 screenht=5 labelsz=5
+	'''
+
+def plotmodel2():
+	return '''
+	window min1=1250 max1=2350 min2=2600 max2=3400 |
+	wiggle  wanttitle=n poly=y transp=y yreverse=y zplot=.7 screenratio=0.4 screenht=5 labelsz=5
+	'''
+
+x1=2500
+y1=1250
+x2=3500
+y2=2350
+Flow('frame.asc',None,'echo %s n1=10 data_format=ascii_float in=$TARGET'% string.join(map(str,(x1,y1, x1,y2, x2,y2, x2,y1, x1,y1))))
+Plot('frame','frame.asc',
+		'''
+		dd type=complex form=native |
+		graph min2=0 max2=6000 min1=0 max1=6000 pad=n plotfat=9 plotcol=0
+		wantaxis=n wanttitle=n yreverse=y scalebar=n
+		''')
+
+# Source
+########
+dt=0.002
+nt=2101
+ddt=0.0005
+factor=dt/ddt
+nnt=(nt-1)*factor+1
+frequency=20
+
+Flow('source',None,
+		'''
+		spike n1=%d d1=%g k1=%d |
+		ricker1 frequency=%g |
+		scale rscale=100
+		''' %(nnt,ddt,1.0/frequency/ddt+15,frequency))
+Flow('real','source','math output=0.')
+Flow('imag','source','envelope hilb=y |halfint |halfint |math output="input/2."')
+Flow('csource','real imag','cmplx ${SOURCES[1]} |window j1=%d' %factor)
+Result('csource','imag |window n1=201 |graph color=j label2=Amplitude label1=Time title="Source Wavelet"')
+
+# Velocity
+##########
+nz=601
+nx=601
+dz=10
+dx=10
+Flow('vel',None,
+		'''
+		math n1=%d n2=%d d1=%g d2=%g output="x1*0.25+2000" |
+		put label1=Depth label2=Distance unit1=m unit2=m
+		''' %(nz,nx,dz,dx))
+Result('imp-vel','vel','grey color=j title= scalebar=y barreverse=y bias=2000 barunit=m/s barlabel=Velocity allpos=y labelsz=7')
+
+# Three different computing grids
+#################################
+for scale in [1,3,4]:
+
+	# Velocity
+	nx=int(600/scale)+1
+	nz=int(600/scale)+1
+	dx=10*scale
+	dz=10*scale
+
+	vel='vel%d' %scale
+
+	Flow(vel,'vel','window j1=%d j2=%d' %(scale,scale))
+	Result(vel,'grey color=j title= scalebar=n allpos=y')
+
+	# Impulse data
+	datapx=int((nx-1)/2+1)
+
+	rdata='rdata%d' %scale
+	idata='idata%d' %scale
+	data='data%d' %scale
+
+	Flow(rdata,None,
+			'''
+			spike n1=%d d1=%g n2=%d d2=%g nsp=11 unit2=m
+			k1=500,650,800,950,1100,1250,1400,1550,1700,1850,2000
+			k2=%d,%d, %d,%d,%d,%d,%d, %d,%d,%d,%d |
+			ricker1 frequency=%g
+			''' %(nt,dt,nx,dx,datapx,datapx, datapx,datapx,datapx,datapx,datapx, datapx,datapx,datapx,datapx,frequency))
+	Flow(idata,rdata,'envelope hilb=y')
+	Flow(data,[rdata,idata],
+			'''
+			cmplx ${SOURCES[1]} |
+			put n3=1 d3=%g o3=%g label3=Shot unit3=m
+			''' %(dx,(nx-1)/2*dx))
+	Result(data,'real |window n2=1 f2=%d |graph max2=0.1 min2=-0.04 title= label2=Amplitude unit2= screenratio=0.4 screenht=5 labelsz=5 label1=Time unit1=s ' %(datapx-1))
+
+	# Lowrank decomposition
+	nb=50
+	par=0.015
+
+	left='./mat/left%d1' %scale
+	right='./mat/right%d1' %scale
+	padvel='padvel%d' %scale
+	fft='fft%d' %scale
+
+	Flow(padvel,vel,'pad2 top=%d bottom=%d left=%d right=%d' %(nb,nb,nb,nb))
+	Flow(fft,padvel,'rtoc |fft3 axis=1 pad=1 |fft3 axis=2 pad=1')
+	Flow([right, left],[padvel,fft],
+			'''
+			cisolr2abc seed=2013 dt=%g eps=1e-4 fft=${SOURCES[1]} left=${TARGETS[1]}
+			nbt=%d nbb=%d nbl=%d nbr=%d ct=%g cb=%g cl=%g cr=%g
+			''' %(dt,nb,nb,nb,nb, par,par,par,par))
+
+	# RTM with Time-shift imaging condition
+	ntau=201
+	dtau=0.002
+	tau0=-(ntau-1)/2*dtau
+	img1='img%d1' %scale
+	img2='img%d2' %scale
+
+	Flow([img1,img2],[data,'csource',vel],
+			'''
+			mpilrrtm_ts Fimg2=${TARGETS[1]} Fsrc=${SOURCES[1]} Fpadvel=${SOURCES[2]}
+			wantwf=n verb=y nb=%d nds=1 gpz=%d spx=%d spz=%d ntau=%d dtau=%g tau0=%g
+			path1='./mat/left%d' path2='./mat/right%d' rnx=%d repeat=1
+			''' %(nb,int(120/dz),int(3000/dx),int(120/dz),ntau,dtau,tau0,scale,scale,nx))
+
+	# Correct time-shift gathers and stack
+	cimg='cimg%d' %scale
+	stack='stack%d' %scale
+
+	Flow(cimg,[img1,'vel'],
+			'''
+			padzero scalex=%d scalez=%d|
+			ctshift velocity=${SOURCES[1]} dt=0.0005 pad=50
+			''' %(scale,scale) )
+	Flow(stack,cimg,'stack axis=3')
+
+	# Linear interpolation
+	limg='limg%d' %scale
+
+	Flow(limg,img1,
+			'''
+			window n3=1 f3=%d |
+			upsamp1 scale=%d |
+			transp |
+			upsamp1 scale=%d |
+			transp
+			''' %(int(ntau-1)/2,scale,scale))
+
+# Plot data
+###########
+Result('imp-data','data1',
+       '''
+	   real |window n2=1 f2=300 |
+	   graph max2=0.1 min2=-0.04 title= label2=Amplitude unit2=
+	   screenratio=0.4 screenht=5 labelsz=5 label1=Time unit1=s
+	   ''')
+
+# Plot time-shift gathers before and after correction
+#####################################################
+Result('imp-cube','img11',
+		'''
+		pow pow1=0.6 |
+		byte gainpanel=a |
+		put label3="Time Shift" |
+		grey3 flat=y frame1=280 frame2=300 frame3=50
+		point1=0.6 point2=0.6 title= label3="Time Shift"
+		labelsz=7
+		''')
+Result('imp-cube2','cimg1',
+		'''
+		pow pow1=0.6 |
+		byte gainpanel=a |
+		put label3="Time Shift" |
+		grey3 flat=y frame1=280 frame2=300 frame3=50
+		point1=0.6 point2=0.6 title= label3="Time Shift"
+		labelsz=7
+		''')
+
+# Reference image
+#################
+Plot('imp-img1','img11',
+		'''
+		window n3=1 f3=%d |
+		grey title= labelsz=8
+		'''%int((ntau-1)/2))
+
+Result('imp-refimg','imp-img1 frame','Overlay')
+Result('imp-refpart1','img11',
+		'''
+		window n3=1 f3=%d |
+		''' %int((ntau-1)/2)
+		+ plotmodel())
+
+# Post-imaging interpolation (spline interpolation)
+###################################################
+Flow('coord',None,
+		'''
+		math n1=2 n2=601 n3=601
+		d1=1 o1=0
+		d2=10 o2=0
+		d3=10 o3=0
+		output="(1-x1)*x2+x1*x3"
+		''')
+Flow('spline3',['img31','coord'],'window n3=1 f3=100 |inttest2 nw=4 interp=spl coord=${SOURCES[1]}')
+Flow('spline4',['img41','coord'],'window n3=1 f3=100 |inttest2 nw=4 interp=spl coord=${SOURCES[1]}')
+
+# Comparison
+############
+Result('imp-part3','img31','window n3=1 f3=%d |'%(int(ntau-1)/2) +plotmodel1())
+Result('imp-spart3','stack3',plotmodel())
+Result('imp-spline3','spline3',plotmodel())
+
+Result('imp-part4','img41','window n3=1 f3=%d |'%(int(ntau-1)/2) +plotmodel2())
+Result('imp-spart4','stack4',plotmodel())
+Result('imp-spline4','spline4',plotmodel())
+
+End()

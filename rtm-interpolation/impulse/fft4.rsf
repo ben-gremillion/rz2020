@@ -1,0 +1,90 @@
+3.1-git	sfmath	zhiguang/rtm-interpolation/impulse:	bengremillion@begw-sf-a09288.beg.utexas.edu	Tue May 12 14:02:58 2020
+
+	x2=1
+	d2=10
+	n2=601
+	o1=0
+	o2=0
+	data_format="native_float"
+	esize=4
+	in="stdout"
+	x1=0
+	d1=10
+	n1=601
+	in="stdin"
+
+3.1-git	sfput	zhiguang/rtm-interpolation/impulse:	bengremillion@begw-sf-a09288.beg.utexas.edu	Tue May 12 14:02:58 2020
+
+	in="/home/bengremillion/DATAPATH/zhiguang/rtm-interpolation/impulse/vel.rsf@"
+	label1=Depth
+	data_format="native_float"
+	unit1=m
+	label2=Distance
+	unit2=m
+3.1-git	sfwindow	zhiguang/rtm-interpolation/impulse:	bengremillion@begw-sf-a09288.beg.utexas.edu	Tue May 12 14:21:30 2020
+
+	d2=40
+	n2=151
+	o1=0
+	o2=0
+	label1="Depth"
+	data_format="native_float"
+	label2="Distance"
+	esize=4
+	j1=4
+	in="/home/bengremillion/DATAPATH/zhiguang/rtm-interpolation/impulse/vel4.rsf@"
+	j2=4
+	unit1="m"
+	unit2="m"
+	d1=40
+	n1=151
+3.1-git	sfpad2	zhiguang/rtm-interpolation/impulse:	bengremillion@begw-sf-a09288.beg.utexas.edu	Tue May 12 14:21:31 2020
+
+	o1=-2000
+	d2=40
+	n2=251
+	label1="Depth"
+	o2=-2000
+	data_format="native_float"
+	label2="Distance"
+	esize=4
+	in="/home/bengremillion/DATAPATH/zhiguang/rtm-interpolation/impulse/padvel4.rsf@"
+	unit1="m"
+	unit2="m"
+	d1=40
+	n1=251
+3.1-git	sfrtoc	zhiguang/rtm-interpolation/impulse:	bengremillion@begw-sf-a09288.beg.utexas.edu	Tue May 12 14:21:31 2020
+
+	data_format="native_complex"
+	esize=8
+	in="stdout"
+	in="stdin"
+
+3.1-git	sffft3	zhiguang/rtm-interpolation/impulse:	bengremillion@begw-sf-a09288.beg.utexas.edu	Tue May 12 14:21:31 2020
+
+	o1=-0.0125
+	fft3_o1=-2000
+	label1="Wavenumber"
+	fft3_label1="Depth"
+	data_format="native_complex"
+	esize=8
+	in="stdout"
+	unit1="1/m"
+	d1=9.76563e-05
+	n1=256
+	fft3_n1=251
+	in="stdin"
+
+3.1-git	sffft3	zhiguang/rtm-interpolation/impulse:	bengremillion@begw-sf-a09288.beg.utexas.edu	Tue May 12 14:21:31 2020
+
+	d2=9.76563e-05
+	n2=256
+	fft3_n2=251
+	o2=-0.0125
+	fft3_o2=-2000
+	data_format="native_complex"
+	label2="Wavenumber"
+	fft3_label2="Distance"
+	esize=8
+	in="/home/bengremillion/DATAPATH/zhiguang/rtm-interpolation/impulse/fft4.rsf@"
+	unit2="1/m"

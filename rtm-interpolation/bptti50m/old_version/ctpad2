@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#-------------------------------
+# Generic SLURM script  -- MPI
+#-------------------------------
+
+#SBATCH -J ctpad2           # Job name
+#SBATCH -o ctpad2.o.%j      # Output file (%j expands to jobID)
+#SBATCH -e ctpad2.e.%j      # Error file (%j expands to jobID)
+#SBATCH -p normal          # Queue name
+#SBATCH -N 10              # Nodes requested
+#SBATCH -n 60              # Total number of mpi tasks requested
+#SBATCH -t 1:00:00        # Run time (hh:mm:ss)
+#SBATCH -A TCCS            # Project account name
+#SBATCH --mail-user=zhiguangxue@gmail.com # Email address
+#SBATCH --mail-type=begin  # email me when the job starts
+#SBATCH --mail-type=end    # email me when the job finishes
+
+
+export OMP_NUM_THREADS=4
+ibrun tacc_affinity sfmpictshiftlr --input=padzone2.rsf --output=cpadzone2.rsf left=left2.rsf right=right2.rsf cmplx=y

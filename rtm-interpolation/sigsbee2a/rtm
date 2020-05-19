@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#-------------------------------
+# Generic SLURM script  -- MPI
+#-------------------------------
+
+#SBATCH -J rtm           # Job name
+#SBATCH -o rtm.o.%j      # Output file (%j expands to jobID)
+#SBATCH -e rtm.e.%j      # Error file (%j expands to jobID)
+#SBATCH -p normal          # Queue name
+#SBATCH -N 30              # Nodes requested
+#SBATCH -n 30              # Total number of mpi tasks requested
+#SBATCH -t 1:00:00        # Run time (hh:mm:ss)
+#SBATCH -A TCCS            # Project account name
+#SBATCH --mail-user=zhiguangxue@gmail.com # Email address
+#SBATCH --mail-type=begin  # email me when the job starts
+#SBATCH --mail-type=end    # email me when the job finishes
+
+
+export OMP_NUM_THREADS=24
+ibrun tacc_affinity /work/02805/xue0810/lonestar/RSFSRC/user/zhiguang/sfmpilrrtm_ts --input=data.rsf --output=img1.rsf Fimg2=img2.rsf Fsrc=csource.rsf Fpadvel=padvmig.rsf verb=n taper=0 scalet=2 nb=60 nds=5 gpz=3 spx=700 spz=3 rnx=1401 ntau=201 dtau=0.004 tau0=-0.4 path1='./mat2/left' path2='./mat2/right'

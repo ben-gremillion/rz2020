@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#-------------------------------
+# Generic SLURM script  -- MPI
+#-------------------------------
+
+#SBATCH -J modeling           # Job name
+#SBATCH -o modeling.o.%j      # Output file (%j expands to jobID)
+#SBATCH -e modeling.e.%j      # Error file (%j expands to jobID)
+#SBATCH -p normal          # Queue name
+#SBATCH -N 20              # Nodes requested
+#SBATCH -n 120              # Total number of mpi tasks requested
+#SBATCH -t 1:00:00        # Run time (hh:mm:ss)
+#SBATCH -A TCCS            # Project account name
+#SBATCH --mail-user=zhiguangxue@gmail.com # Email address
+#SBATCH --mail-type=begin  # email me when the job starts
+#SBATCH --mail-type=end    # email me when the job finishes
+
+export OMP_NUM_THREADS=4
+ibrun tacc_affinity /work/02805/xue0810/lonestar/RSFSRC/user/zhiguang/sfmpilrmodel --input=csource.rsf --output=data.rsf Fpadvel=padvel.rsf nb=60 ns=321 ds=0.07620 s0=3.048 rnx=1401 nr=1401 ndr=1 nr0=0 gpz=3 spx=700 spz=3

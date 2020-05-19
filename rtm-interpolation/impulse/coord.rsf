@@ -1,0 +1,17 @@
+3.1-git	sfmath	zhiguang/rtm-interpolation/impulse:	bengremillion@begw-sf-a09288.beg.utexas.edu	Tue May 12 14:23:34 2020
+
+	x2=1
+	d2=10
+	n2=601
+	o1=0
+	x3=2
+	d3=10
+	n3=601
+	o2=0
+	data_format="native_float"
+	o3=0
+	esize=4
+	in="/home/bengremillion/DATAPATH/zhiguang/rtm-interpolation/impulse/coord.rsf@"
+	x1=0
+	d1=1
+	n1=2

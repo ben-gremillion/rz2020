@@ -1,0 +1,16 @@
+3.1-git	sfmpilrrtm_ts	zhiguang/rtm-interpolation/impulse:	bengremillion@begw-sf-a09288.beg.utexas.edu	Tue May 12 14:21:09 2020
+
+	d2=30
+	n2=201
+	o1=0
+	n3=1
+	o2=0
+	label1="Depth"
+	data_format="native_float"
+	label2="Distance"
+	esize=4
+	in="/home/bengremillion/DATAPATH/zhiguang/rtm-interpolation/impulse/img32.rsf@"
+	unit1="m"
+	unit2="m"
+	d1=30
+	n1=201

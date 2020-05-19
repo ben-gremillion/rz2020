@@ -1,0 +1,53 @@
+3.1-git	sfsegyread	zhiguang/rtm-interpolation/sigsbee2a:	bengremillion@begw-sf-a09288.beg.utexas.edu	Thu Mar 26 14:15:26 2020
+
+	d2=1
+	o1=0
+	n2=3201
+	o2=0
+	label1="Time"
+	data_format="native_float"
+	head="vtfile.rsf"
+	label2="Trace"
+	esize=4
+	in="stdout"
+	unit1="s"
+	d1=0.025
+	n1=1201
+	in="stdin"
+
+3.1-git	sfput	zhiguang/rtm-interpolation/sigsbee2a:	bengremillion@begw-sf-a09288.beg.utexas.edu	Thu Mar 26 14:15:26 2020
+
+	unit2=km
+	d2=.00762
+	label1=Depth
+	label2=Distance
+	data_format="native_float"
+	o1=0
+	in="stdout"
+	o2=3.048
+	unit1=km
+	d1=.00762
+	in="stdin"
+
+3.1-git	sfscale	zhiguang/rtm-interpolation/sigsbee2a:	bengremillion@begw-sf-a09288.beg.utexas.edu	Thu Mar 26 14:15:26 2020
+
+	data_format="native_float"
+	esize=4
+	in="/home/bengremillion/DATAPATH/zhiguang/rtm-interpolation/sigsbee2a/vel.rsf@"
+3.1-git	sfwindow	zhiguang/rtm-interpolation/sigsbee2a:	bengremillion@begw-sf-a09288.beg.utexas.edu	Thu Mar 26 14:15:26 2020
+
+	d2=0.01524
+	n2=1601
+	o1=0
+	o2=3.048
+	label1="Depth"
+	data_format="native_float"
+	label2="Distance"
+	esize=4
+	j1=2
+	in="/home/bengremillion/DATAPATH/zhiguang/rtm-interpolation/sigsbee2a/vel2.rsf@"
+	j2=2
+	unit1="km"
+	unit2="km"
+	d1=0.01524
+	n1=601

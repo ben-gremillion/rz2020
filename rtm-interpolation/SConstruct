@@ -1,0 +1,21 @@
+from rsf.tex import *
+import os, sys
+os.environ['PSTEXPENOPTS']='color=y fat=3 fatmult=1.5'
+
+Paper('segabs',lclass='segabs',use='listings',color='ALL',
+include=r'''
+\setlength{\textheight}{9.3in}
+\setlength{\textwidth}{6.59in}
+\setlength{\parskip}{1.5ex plus0.1ex minus0.1ex} % should be a *rubber* length
+\setlength{\oddsidemargin}{.001in}
+\setlength{\evensidemargin}{.001in}
+\setlength{\topmargin}{-0.5in} %-0.4in corresponds to textheight 9in -0.8in corresponds to textheight 10in
+\setlength{\textfloatsep}{30pt plus 3pt minus 6pt}
+\setlength{\headsep}{0.1in}
+''')
+
+Paper('gp-revision',options='manuscript,revised,a4paper',color='ALL',include='\\bibpunct{(}{)}{;}{a}{}{\\,}')
+
+Paper('gp',options='manuscript,a4paper',color='ALL',include='\\bibpunct{(}{)}{;}{a}{}{\\,}')
+
+End(lclass='geophysics',options='manuscript',color='ALL',use='amsmath')

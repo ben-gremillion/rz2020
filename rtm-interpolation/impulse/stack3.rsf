@@ -1,0 +1,42 @@
+3.1-git	sfmpilrrtm_ts	zhiguang/rtm-interpolation/impulse:	bengremillion@begw-sf-a09288.beg.utexas.edu	Tue May 12 14:21:09 2020
+
+	d2=30
+	n2=201
+	o1=0
+	d3=0.002
+	n3=201
+	o2=0
+	label1="Depth"
+	data_format="native_float"
+	o3=-0.2
+	label2="Distance"
+	label3="Tau"
+	esize=4
+	in="/home/bengremillion/DATAPATH/zhiguang/rtm-interpolation/impulse/img31.rsf@"
+	unit1="m"
+	unit2="m"
+	unit3="s"
+	d1=30
+	n1=201
+3.1-git	sfpadzero	zhiguang/rtm-interpolation/impulse:	bengremillion@begw-sf-a09288.beg.utexas.edu	Tue May 12 14:21:09 2020
+
+	d2=10
+	n2=601
+	data_format="native_float"
+	esize=4
+	in="stdout"
+	d1=10
+	n1=601
+	in="stdin"
+
+3.1-git	sfctshift	zhiguang/rtm-interpolation/impulse:	bengremillion@begw-sf-a09288.beg.utexas.edu	Tue May 12 14:21:30 2020
+
+	data_format="native_float"
+	esize=4
+	in="/home/bengremillion/DATAPATH/zhiguang/rtm-interpolation/impulse/cimg3.rsf@"
+3.1-git	sfstack	zhiguang/rtm-interpolation/impulse:	bengremillion@begw-sf-a09288.beg.utexas.edu	Tue May 12 14:21:30 2020
+
+	n3=1
+	data_format="native_float"
+	esize=4
+	in="/home/bengremillion/DATAPATH/zhiguang/rtm-interpolation/impulse/stack3.rsf@"
